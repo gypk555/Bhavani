@@ -4,22 +4,39 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Login = ({ setLoggedIn, setUserRole }) => {
-  const Navigate = useNavigate();
+  const navigate = useNavigate();
   const [credentials, update_credentials] = useState({
     username: "",
     password: "",
   });
 
+
+  // useEffect(() => {
+  //   axios
+  //     .get("http://localhost:5000/api/check-session", { withCredentials: true })
+  //     .then((response) => {
+  //       if (response.data.loggedIn) {
+  //         console.log("User role from API in Login.js:", response.data.user.role);
+  //         navigate(response.data.user.role === "admin" ? "/admin" : "/");
+  //       }
+  //     })
+  //     .catch((err) => console.error("Session check error:", err));
+  // }, [navigate]);
+  
+
   useEffect(() => {
     axios
-      .get("http://192.168.1.28:5000/api/check-session", { withCredentials: true })
+      .get("http://localhost:5000/api/check-session", { withCredentials: true })
       .then((response) => {
         if (response.data.loggedIn) {
-          Navigate(response.data.user.role === "admin" ? "/admin" : "/");
+          // setUser(response.data.user);
+          localStorage.setItem("userRole", response.data.user.role); // Ensure storage update
+          console.log("user role is ", response.data.user.role);
+          navigate(response.data.user.role === "admin" ? "/admin" : "/");
         }
       })
       .catch((err) => console.error("Session check error:", err));
-  }, []);
+  }, [navigate]);
 
   function handle_logdetails(event) {
     const { name, value } = event.target;
@@ -34,16 +51,19 @@ const Login = ({ setLoggedIn, setUserRole }) => {
     if (credentials.username !== "" && credentials.password !== "") {
       try {
         const response = await axios.post(
-          "http://192.168.1.28:5000/api/login",
+          "http://localhost:5000/api/login",
           credentials,
           { withCredentials: true }
         );
 
         setLoggedIn(true); // Update state immediately
         setUserRole(response.data.user.role); // Store role
-
-        const role = response.data.user.role;
-        Navigate(role === "admin" ? "/admin" : "/");
+        localStorage.setItem("userRole", response.data.user.role); // Ensure role is stored
+        // console.log("user role is ", response.data.user.role);
+        // console.log("set usr role is ", setUserRole);
+        navigate(response.data.user.role === "admin" ? "/admin" : "/");
+        // const role = response.data.user.role;
+        // navigate(role === "admin" ? "/admin" : "/");
       } catch (error) {
         console.error("Login Error:", error.response?.data || error.message);
         alert("Login failed. Please check your credentials.");

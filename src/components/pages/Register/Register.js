@@ -26,7 +26,7 @@ const Register = () => {
         if(user_inputs.c_password===user_inputs.password){
             try{
               // alert("data is sending");
-                const res=await axios.post("http://192.168.1.28:5000/api/signup", user_inputs);
+                const res=await axios.post("http://localhost:5000/api/signup", user_inputs);
                 if(res.data==='error' || res.data==="Username already exists.Please choose different one"){
                     alert(res.data);
                 }

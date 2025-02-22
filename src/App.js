@@ -13,23 +13,44 @@ function App() {
   const [userRole, setUserRole] = useState(""); // Store user role
 
   useEffect(() => {
-    axios
-      .get("http://192.168.1.28:5000/api/check-session", { withCredentials: true })
-      .then((response) => {
-        if (response.data.loggedIn) {
-          setLoggedIn(true);
-          setUserRole(response.data.user.role);
-          localStorage.setItem("isLoggedIn", "true"); // Store login status
-          localStorage.setItem("userRole", response.data.user.role);
-        }
-      })
-      .catch(() => {
+  // 1. Set initial state from localStorage
+  const storedLogin = localStorage.getItem("isLoggedIn") === "true";
+  const storedRole = localStorage.getItem("userRole") || "";
+
+  setLoggedIn(storedLogin);
+  setUserRole(storedRole);
+
+  console.log("Before API call, stored role:", storedRole);
+
+  // 2. Fetch session details from backend
+  axios
+    .get("http://localhost:5000/api/check-session", { withCredentials: true })
+    .then((response) => {
+      console.log("API Response:", response.data); // Debugging line
+
+      if (response.data.loggedIn) {
+        setLoggedIn(true);
+        setUserRole(response.data.user.role);
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("userRole", response.data.user.role);
+      } else {
         setLoggedIn(false);
         setUserRole("");
         localStorage.removeItem("isLoggedIn");
         localStorage.removeItem("userRole");
-      });
-  }, []);
+      }
+
+      console.log("After API call, updated role:", response.data.user?.role);
+    })
+    .catch((error) => {
+      console.error("Session check error:", error);
+      setLoggedIn(false);
+      setUserRole("");
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("userRole");
+    });
+}, []);
+
 
   return (
     <Router>
@@ -41,8 +62,14 @@ function App() {
         {/* Prevent registered users from accessing the Register page */}
         <Route path="/register" element={loggedIn ? <Navigate to="/" /> : <Register />} />
         
-        {/* Protect the Admin Route */}
+        {/* Ensure role is checked before redirecting */}
+        {userRole && (
         <Route path="/admin" element={userRole === "admin" ? <Admin /> : <Navigate to="/" />} />
+        )}
+        
+        {/* Protect the Admin Route */}
+        {/* <Route path="/admin" element={userRole === "admin" ? <Admin /> : <Navigate to="/" />} /> */}
+        {/* <Route path="/admin" element={userRole === "admin" ? <Admin /> : <Navigate to="/" />} /> */}
       </Routes>
       <Footer />
     </Router>

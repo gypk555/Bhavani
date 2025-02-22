@@ -8,7 +8,7 @@ const Navbar = ({ loggedIn, setLoggedIn }) => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://192.168.1.28:5000/api/logout", {}, { withCredentials: true });
+      await axios.post("http://localhost:5000/api/logout", {}, { withCredentials: true });
       setLoggedIn(false); // Update state immediately
       navigate("/");
     } catch (error) {

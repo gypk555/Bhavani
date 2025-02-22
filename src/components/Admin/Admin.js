@@ -17,7 +17,7 @@ function Admin() {
   const fetchItems = async () => {
     try {
       console.log("Fetching items from the database...");
-      const response = await axios.get("http://192.168.1.28:5000/api/admin");
+      const response = await axios.get("http://localhost:5000/api/admin");
       setItems(response.data);
       console.log("Items fetched successfully:", response.data);
     } catch (error) {
@@ -41,7 +41,7 @@ function Admin() {
       console.log("Adding new item to the database...");
       console.log("sending api request to add item");
       console.log(formData.get("name"), formData.get("author"),formData.get("description"), formData.get("price"));
-      const response = await axios.post("http://192.168.1.28:5000/api/admin", formData, {
+      const response = await axios.post("http://localhost:5000/api/admin", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log("Item added successfully:", response.data);
@@ -58,7 +58,7 @@ function Admin() {
   const handleDeleteItem = async (id) => {
     try {
       console.log(`Deleting item with ID: ${id}`);
-      const response = await axios.delete(`http://192.168.1.28:5000/api/admin`, {data: { id }});
+      const response = await axios.delete(`http://localhost:5000/api/admin`, {data: { id }});
       console.log("Item deleted successfully:", response.data);
       alert("Item deleted successfully!");
       fetchItems(); // Refresh the items list
