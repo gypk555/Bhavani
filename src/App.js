@@ -26,7 +26,7 @@ function App() {
 
   // 2. Fetch session details from backend
   axios
-    .get("http://localhost:5000/api/check-session", { withCredentials: true })
+    .get("https://colo-candy-back-end.onrender.com/api/check-session", { withCredentials: true })
     .then((response) => {
       console.log("API Response:", response.data); // Debugging line
 
