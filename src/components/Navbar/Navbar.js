@@ -11,7 +11,7 @@ const Navbar = () => {
   useEffect(() => {
     // Check session status when the component mounts
     axios
-      .get("http://localhost:5000/api/check-session", { withCredentials: true })
+      .get("https://colo-candy-back-end.onrender.com/api/check-session", { withCredentials: true })
       .then((response) => {
         if (response.data.loggedIn) {
           setLoggedIn(true);
@@ -22,7 +22,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:5000/api/logout", {}, { withCredentials: true });
+      await axios.post("https://colo-candy-back-end.onrender.com/api/logout", {}, { withCredentials: true });
       setLoggedIn(false); // Update state immediately
       navigate("/");
     } catch (error) {
