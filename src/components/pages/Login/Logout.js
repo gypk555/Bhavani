@@ -6,7 +6,7 @@ const Logout = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("localhost:5000/api/logout", {}, { withCredentials: true });
+      await axios.post("https://colo-candy-back-end.onrender.com/api/logout", {}, { withCredentials: true });
       alert("Logged out successfully!");
       Navigate("/");
     } catch (error) {
