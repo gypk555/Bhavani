@@ -102,7 +102,7 @@ const ProductGrid = () => {
   const fetchItems = async () => {
     try {
       console.log("Fetching items from the database...");
-      const response = await axios.get("http://localhost:5000/api/admin");
+      const response = await axios.get("https://colo-candy-back-end.onrender.com/api/admin");
       setItems(response.data);
       items=response.data;
       console.log("Items fetched successfully:", response.data);
