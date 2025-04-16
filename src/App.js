@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import axios from "axios";
 import Navbar from "./components/Navbar/Navbar";
-import ProductGrid from "./components/Body/Product";
+import {ProductGrid} from "./components/Home Page/Product";
+import ProductDetails from "./components/Home Page/ProductDetails";
 import Footer from "./components/Footer/Footer";
 import Login from "./components/pages/Login/Login";
 import Register from "./components/pages/Register/Register";
@@ -20,7 +21,8 @@ function App() {
   setLoggedIn(storedLogin);
   setUserRole(storedRole);
 
-  console.log("Before API call, stored role:", storedRole);
+  console.log("Before API call, logged in role:", loggedIn);
+  console.log("before api call, user role ", userRole);
 
   // 2. Fetch session details from backend
   axios
@@ -41,6 +43,7 @@ function App() {
       }
 
       console.log("After API call, updated role:", response.data.user?.role);
+      console.log("user role ", userRole);
     })
     .catch((error) => {
       console.error("Session check error:", error);
@@ -50,6 +53,7 @@ function App() {
       localStorage.removeItem("userRole");
     });
 }, []);
+
 
 
   return (
@@ -66,9 +70,12 @@ function App() {
         {userRole && (
         <Route path="/admin" element={userRole === "admin" ? <Admin /> : <Navigate to="/" />} />
         )}
+
+        <Route path="/product/:id" element={<ProductDetails />} />
         
         {/* Protect the Admin Route */}
         {/* <Route path="/admin" element={userRole === "admin" ? <Admin /> : <Navigate to="/" />} /> */}
+        {/* <Route path="/admin" element={<Admin />} /> */}
         {/* <Route path="/admin" element={userRole === "admin" ? <Admin /> : <Navigate to="/" />} /> */}
       </Routes>
       <Footer />

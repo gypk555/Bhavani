@@ -7,7 +7,6 @@ function Admin() {
   const [items, setItems] = useState([]); // Stores all items fetched from the database
   const [newItem, setNewItem] = useState({
     name: "",
-    author: "",
     description: "",
     price: "",
     image: null, // For storing the selected image
@@ -32,7 +31,6 @@ function Admin() {
     console.log(newItem.name, newItem.author,newItem.description,newItem.price);
     const formData = new FormData(); // For sending image and data together
     formData.append("name", newItem.name);
-    formData.append("author", newItem.author);
     formData.append("description", newItem.description);
     formData.append("price", newItem.price);
     formData.append("image", newItem.image);
@@ -40,14 +38,14 @@ function Admin() {
     try {
       console.log("Adding new item to the database...");
       console.log("sending api request to add item");
-      console.log(formData.get("name"), formData.get("author"),formData.get("description"), formData.get("price"));
+      console.log(formData.get("name"), formData.get("description"), formData.get("price"));
       const response = await axios.post("http://localhost:5000/api/admin", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log("Item added successfully:", response.data);
       alert("Item added successfully!");
       fetchItems(); // Refresh the items list
-      setNewItem({ name: "",author: "", description: "", price: "" }); // Reset the form
+      setNewItem({ name: "", description: "", price: "", image:null}); // Reset the form
     } catch (error) {
       console.error("Error adding item:", error.response?.data || error.message);
       alert("Failed to add item. Please try again.");
@@ -103,14 +101,6 @@ function Admin() {
           onChange={handleInputChange}
           required
         />
-        <input
-          type="text"
-          name="author"
-          placeholder="author Name"
-          value={newItem.author}
-          onChange={handleInputChange}
-          required
-        />
         <textarea
           name="description"
           placeholder="Item Description"
@@ -134,10 +124,10 @@ function Admin() {
       <h3>Manage Items</h3>
       <div>
         <div className="items-Display-headings">
-          <h4>Name</h4> 
-          <h4>Author</h4> 
+          <h4>Name</h4>  
           <h4>Description</h4>  
-          <h4>Price</h4>  
+          <h4>Price</h4>
+          {/* <h4>Image</h4>   */}
           <h4>Action</h4> 
         </div>
         {items.length > 0 ? (
@@ -145,7 +135,6 @@ function Admin() {
             
             <div key={item.id} className="items-Display" style={{ border: "1px solid #ddd", padding: "10px", marginBottom: "10px" }}>
               <h6>{item.name}</h6>
-              <h6>{item.author}</h6>
               <p>{item.description}</p>
               <p>Price: ${item.price}</p>
               { /*{item.imageUrl && <img src={item.imageUrl} alt={item.name} style={{ width: "100px" }} />} */}

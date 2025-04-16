@@ -11,32 +11,34 @@ const Login = ({ setLoggedIn, setUserRole }) => {
   });
 
 
-  // useEffect(() => {
-  //   axios
-  //     .get("http://localhost:5000/api/check-session", { withCredentials: true })
-  //     .then((response) => {
-  //       if (response.data.loggedIn) {
-  //         console.log("User role from API in Login.js:", response.data.user.role);
-  //         navigate(response.data.user.role === "admin" ? "/admin" : "/");
-  //       }
-  //     })
-  //     .catch((err) => console.error("Session check error:", err));
-  // }, [navigate]);
-  
-
   useEffect(() => {
     axios
       .get("http://localhost:5000/api/check-session", { withCredentials: true })
       .then((response) => {
         if (response.data.loggedIn) {
-          // setUser(response.data.user);
-          localStorage.setItem("userRole", response.data.user.role); // Ensure storage update
-          console.log("user role is ", response.data.user.role);
+          console.log("User role from API in Login.js:", response.data.user.role);
           navigate(response.data.user.role === "admin" ? "/admin" : "/");
         }
       })
       .catch((err) => console.error("Session check error:", err));
   }, [navigate]);
+  
+
+  // useEffect(() => {
+  //   axios
+  //     .get("http://192.168.104.11:5000/api/check-session", { withCredentials: true })
+  //     .then((response) => {
+  //       if (response.data.loggedIn) {
+  //         console.log("Before API call, logged in role in login.js :", response.data.loggedIn);
+  //         console.log("before api call, user role in login.js  ", response.data.userRole);
+  //         // setUser(response.data.user);
+  //         localStorage.setItem("userRole", response.data.user.role); // Ensure storage update
+  //         console.log("user role is ", response.data.user.role);
+  //         navigate(response.data.user.role === "admin" ? "/admin" : "/");
+  //       }
+  //     })
+  //     .catch((err) => console.error("Session check error:", err));
+  // }, [navigate]);
 
   function handle_logdetails(event) {
     const { name, value } = event.target;
@@ -50,18 +52,28 @@ const Login = ({ setLoggedIn, setUserRole }) => {
     e.preventDefault();
     if (credentials.username !== "" && credentials.password !== "") {
       try {
+        console.log("Sending login data to the backend...");
         const response = await axios.post(
           "http://localhost:5000/api/login",
           credentials,
           { withCredentials: true }
         );
 
-        setLoggedIn(true); // Update state immediately
-        setUserRole(response.data.user.role); // Store role
-        localStorage.setItem("userRole", response.data.user.role); // Ensure role is stored
-        // console.log("user role is ", response.data.user.role);
-        // console.log("set usr role is ", setUserRole);
-        navigate(response.data.user.role === "admin" ? "/admin" : "/");
+        console.log("login.js line 62, Response data: ", response.data);
+        console.log("login.js line 63, Role from response: ", response.data.user.role);
+
+        // Redirect based on role
+        const role = response.data.user.role;
+        navigate(role === "admin" ? "/admin" : "/");
+
+        // setLoggedIn(true); // Update state immediately
+        // setUserRole(response.data.user.role); // Store role
+        // localStorage.setItem("userRole", response.data.user.role); // Ensure role is stored
+        // console.log("user role is login.js code ", response.data.user.role);
+        // console.log("set usr role is login.js code ", setUserRole);
+        // console.log("set logged in value in login.js is ", setLoggedIn);
+        // console.log("set user role value in login.js is ", setUserRole);
+        // navigate(response.data.user.role === "admin" ? "/admin" : "/");
         // const role = response.data.user.role;
         // navigate(role === "admin" ? "/admin" : "/");
       } catch (error) {

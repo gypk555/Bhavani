@@ -1,10 +1,24 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Navbar.css";
 
-const Navbar = ({ loggedIn, setLoggedIn }) => {
+const Navbar = () => {
+  const [loggedIn, setLoggedIn] = useState(false); // State to track login status
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check session status when the component mounts
+    axios
+      .get("http://localhost:5000/api/check-session", { withCredentials: true })
+      .then((response) => {
+        if (response.data.loggedIn) {
+          setLoggedIn(true);
+        }
+      })
+      .catch((err) => console.error("Session check error:", err));
+  }, []);
 
   const handleLogout = async () => {
     try {
