@@ -13,7 +13,7 @@ const Login = ({ setLoggedIn, setUserRole }) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/check-session", { withCredentials: true })
+      .get("https://colo-candy-back-end.onrender.com/api/check-session", { withCredentials: true })
       .then((response) => {
         if (response.data.loggedIn) {
           console.log("User role from API in Login.js:", response.data.user.role);
@@ -26,7 +26,7 @@ const Login = ({ setLoggedIn, setUserRole }) => {
 
   // useEffect(() => {
   //   axios
-  //     .get("http://192.168.104.11:5000/api/check-session", { withCredentials: true })
+  //     .get("https://colo-candy-back-end.onrender.com/api/check-session", { withCredentials: true })
   //     .then((response) => {
   //       if (response.data.loggedIn) {
   //         console.log("Before API call, logged in role in login.js :", response.data.loggedIn);
@@ -54,7 +54,7 @@ const Login = ({ setLoggedIn, setUserRole }) => {
       try {
         console.log("Sending login data to the backend...");
         const response = await axios.post(
-          "http://localhost:5000/api/login",
+          "https://colo-candy-back-end.onrender.com/api/login",
           credentials,
           { withCredentials: true }
         );
